@@ -106,18 +106,24 @@ export function addExtrasListeners({ el, actor, token, hud }) {
     action(
         'roll-aid',
         async event => {
-            const variants = await variantsDialog(null, 15)
-            const note = { text: '@UUID[Compendium.pf2e.other-effects.Item.AHMUpMbaVkZ5A1KX]' }
-            if (variants !== null) {
-                game.pf2e.actions.get('aid').use({
-                    event,
-                    actors: [actor],
-                    tokens: [token],
-                    statistic: variants?.selected,
-                    difficultyClass: { value: variants?.dc },
-                    notes: [note],
-                })
-                if (getSetting('skill-close')) hud.close()
+            const aseAid = game.actionsupportenginemacro?.aid;
+
+            if (aseAid) {
+                aseAid(actor)
+            } else {
+                const variants = await variantsDialog(null, 15)
+                const note = { text: '@UUID[Compendium.pf2e.other-effects.Item.AHMUpMbaVkZ5A1KX]' }
+                if (variants !== null) {
+                    game.pf2e.actions.get('aid').use({
+                        event,
+                        actors: [actor],
+                        tokens: [token],
+                        statistic: variants?.selected,
+                        difficultyClass: { value: variants?.dc },
+                        notes: [note],
+                    })
+                    if (getSetting('skill-close')) hud.close()
+                }
             }
         },
         'click contextmenu'
